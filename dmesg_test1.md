@@ -1,5 +1,5 @@
-dmesg是一种程序，用于检测和控制内核环缓冲，程序用来助用户了解系统的启动信息。
-dmesg命令用于打印Linux系统开机启动信息，kernel会将开机信息存储在ring buffer中。
+dmesg是一种程序，用于检测和控制内核环缓冲，程序用来助用户了解系统的启动信息。   
+dmesg命令用于打印Linux系统开机启动信息，kernel会将开机信息存储在ring buffer中。   
 
 # linux中的dmesg命令以及确定进程是否被系统主动kill
 来源： http://3ms.huawei.com/km/blogs/details/5218641
@@ -9,7 +9,7 @@ dmesg命令用于打印Linux系统开机启动信息，kernel会将开机信息�
 
 # 确定进程是否被Kill
 
-执行dmesg命令
+执行dmesg命令   
 ```sh
 [bin]# dmesg
 [882877.989319] Out of memory: Kill process 10212 (java) score 121 or sacrifice child
@@ -28,10 +28,10 @@ dmesg命令用于打印Linux系统开机启动信息，kernel会将开机信息�
 [919245.007146] TCP: Peer 1.61.9.67:1945/8017 unexpectedly shrunk window 3435724834:3435724895 (repaired)
 ```
 
-可以看到
+可以看到   
 ``` Out of memory: Kill process 10212 (java) score 121 or sacrifice child ```
 
-java进程被杀掉，关于dmesg的原始时间戳，是系统的产生mesg的系统uptime时间，故需要获取系统的启动时间。   
+java进程被杀掉，关于dmesg的原始时间戳，是系统的产生mesg的系统uptime时间，故需要获取系统的启动时间。    
 
 编写脚本ts_dmesg.sh
 ```sh
@@ -52,8 +52,9 @@ dmesg | awk -v uptime_ts=$uptime_ts 'BEGIN {
  > 1.txt  # 最后这句是我加的，把dmesg显示结果写入文件
 ```
 
-执行
+执行   
 ```sh ts_dmesg```
+
 输出，可以识别的时间
 ```
 [2017/02/21 00:01:26] [882877.989319] Out of memory: Kill process 10212 (java) score 121 or sacrifice child
@@ -74,4 +75,31 @@ dmesg | awk -v uptime_ts=$uptime_ts 'BEGIN {
 
 # 关于系统/proc/uptime时间
 
-在Linux中，我们常常会使用到uptime命令去看看系统的运行时间，它与一个文件有关，就是/proc/uptime，下面对其进行详细介绍。
+在Linux中，我们常常会使用到uptime命令去看看系统的运行时间，它与一个文件有关，就是/proc/uptime，下面对其进行详细介绍。   
+```sh
+#查看uptime
+[bin]# cat /proc/uptime
+920362.41 12509668.19
+#查看cpu核心数
+[bin]# cat /proc/cpuinfo  | grep processor | wc -l  
+16
+```
+第一列输出的是，系统启动到现在的时间（以秒为单位），这里简记为num1；   
+第二列输出的是，系统空闲的时间（以秒为单位）, 这里简记为num2。   
+   
+注意，很多很多人都知道第二个是系统空闲的时间，   
+
+但是可能你不知道是，在SMP系统里，系统空闲的时间有时会是系统运行时间的几倍，这是怎么回事呢？   
+因为系统空闲时间的计算，是把SMP算进去的，就是所你有几个逻辑的CPU（包括超线程）。   
+
+系统的空闲率(%) = num2/(num1*N) #其中N是SMP系统中的CPU个数。   
+
+从上面的时间可以计算出：   
+本机启动到现在的时间长度为920362.41 seconds = 10.6 days   
+空闲率为:12509668.19/(920362.41*16)=85.0%   
+
+系统空闲率越大，说明系统比较闲，可以加重一些负载；   
+
+而系统空闲率很小，则可能考虑升级本机器硬件或者迁移部分负载到其他机器上。   
+
+
