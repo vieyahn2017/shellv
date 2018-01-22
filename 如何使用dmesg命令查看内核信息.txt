@@ -1,0 +1,25 @@
+当操作系统出现问题时候，除了查看日志信息外，查看内核信息也是很重要的问题定位方法，但是如何查看内核信息呢？
+回答
+dmesg命令用来查看内核输出缓冲区信息，即内核、驱动的日志输出，系统级的错误消息，可以快速发现如下异常：
+硬件设备异常（硬盘、网卡、HBA卡等）。
+驱动异常（多路径驱动、网卡驱动等）。
+文件系统错误。
+应用程序段错误。
+dmesg输出信息中没有时间信息，查看时间信息可直接查看系统日志“/var/log/messages”。
+窍门：
+定位问题时候一般情况看dmesg最后的数十行输出即可。
+dmesg输出日志典型格式：
+模块名|驱动名|进程名：详细日志
+示例如下：
+# dmesg |tail -n 30
+e1000: eth0: e1000_watchdog_task: NIC Link is Down
+e1000: eth0: e1000_watchdog_task: NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX/TX
+LLT INFO V-14-1-10032 link 0 (link1) node 1 inactive 15 sec (2635460)
+LLT INFO V-14-1-10033 link 0 (link1) node 1 expired
+GAB INFO V-15-1-20036 Port a gen   62f503 membership 0
+GAB INFO V-15-1-20036 Port h gen   62f502 membership 0
+nfsd: last server has exited
+nfsd: unexporting all filesystems
+NFSD: Using /var/lib/nfs/v4recovery as the NFSv4 state recovery directory
+fbserver[29308]: segfault at 0000000000000058 rip 00000000f7a893f0 rsp 00000000ffda8c48 error 4
+ReiserFS : dm-50 : warning : vs-5150 : search_by_key : invalid format found in block 32927.Fsck ?
