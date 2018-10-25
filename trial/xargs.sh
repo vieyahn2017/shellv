@@ -1,16 +1,16 @@
 #!/bin/sh  
   
-#Í³¼Æ³ö/tmpÄ¿Â¼ÏÂËùÓĞ½Å±¾ÎÄ¼ş(.sh)µÄĞĞÊı
-find /tmp -name ".sh" -print0 | xargs -0 wc -l
+#ç»Ÿè®¡å‡º/tmpç›®å½•ä¸‹æ‰€æœ‰è„šæœ¬æ–‡ä»¶(.sh)çš„è¡Œæ•°
+find /tmp -name "*.sh" -print0 | xargs -0 wc -l
 
 
-# ¸´ÖÆËùÓĞÍ¼Æ¬ÎÄ¼şµ½ /data/images Ä¿Â¼ÏÂ£º
-ls *.jpg | xargs -n1 -I cp {} /data/images
-
-
-# Í³¼ÆÒ»¸öÔ´´úÂëÄ¿Â¼ÖĞËùÓĞpyÎÄ¼şµÄĞĞÊı£º
+# ç»Ÿè®¡ä¸€ä¸ªæºä»£ç ç›®å½•ä¸­æ‰€æœ‰pyæ–‡ä»¶çš„è¡Œæ•°ï¼š
 find . -type f -name "*.py" -print0 | xargs -0 wc -l
 
 
-#²éÕÒÏµÍ³ÖĞ²»ÊôÓÚÈÎºÎÓÃ»§µÄÎÄ¼ş¼°Ä¿Â¼
+# å¤åˆ¶æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶åˆ° /data/images ç›®å½•ä¸‹ï¼š
+ls *.jpg | xargs -n1 -I {} cp {} /data/images
+
+
+#æŸ¥æ‰¾ç³»ç»Ÿä¸­ä¸å±äºä»»ä½•ç”¨æˆ·çš„æ–‡ä»¶åŠç›®å½•
 df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nouser -ls
